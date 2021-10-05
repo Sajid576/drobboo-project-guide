@@ -45,6 +45,12 @@ upstream customer-home {
 
 }
 
+upstream storage {
+	server localhost:7011;
+}
+
+
+
 
 ///server block 
 
@@ -61,5 +67,10 @@ location /customer-home/ {
                 proxy_pass http://customer-home/;
 
 }
+
+location /storage/ {
+		proxy_pass http://storage/;
+}
+
 
 
