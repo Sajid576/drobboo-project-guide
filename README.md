@@ -54,14 +54,43 @@ $ kill -9 <PID>
 $ yarn db:create
 ```
 
+- Before entering the container , run the following command to copy the `pgsql` file of PostgreSQL from HOST OS into the container OS:
+```
+$ docker cp <path to pgsql file> <container_id>:<path to backup folder inside container where the pgsql file will be saved>
+```
+
+For Example: 
+```
+$ docker cp /home/sajid576/Public/drobboo/drobboo_dbfile.pgsql  fa14cac10c04:/var/lib/postgresql/data/backup
+```
+
+- To enter into postgres container as `postgres` user,run the following command:
+```
+$ docker exec -it -u postgres postgres bash
+```
+- To enter into postgres container as `Root` user,run the following command:
+```
+$ docker exec -it  postgres bash
+```
+
+- After entering into container as `postgres` user, run the following command import the data of `pgsql` file to a database named `drobboo_dev` :
+```
+$ psql -U <username> <database_name>     <     <path to pgsql file inside  container>
+```
+`drobboo_dev` database is defined in `env` file. 
+ For Example:
+ ```
+ $ psql -U postgres drobboo_dev <    /var/lib/postgresql/data/backup/drobboo_dbfile.pgsql
+ ```
+ `drobboo_dev`  database should now contain the data that is in the .pgsql file.
+- Then go to `Drobboo-server` repository, and run the following to migrate the database to project:
+```
+$ yarn db:migrate:all
+```
 
 
 
 
-
-
-docker exec -it -u postgres bash
- 
 ## NGINX Configuration
 
 - After installing nginx go to below directory:
