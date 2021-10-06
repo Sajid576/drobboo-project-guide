@@ -26,12 +26,15 @@ docker run -it --name mongo -d -e MONGO_INITDB_ROOT_USERNAME=mongo -e MONGO_INIT
 
 docker exec -it -u postgres bash
  
-_________nginx____
+## NGINX Configuration
 
-after installing nginx go to : etc/nginx/sites-enabled/default
+- After installing nginx go to below directory:
+```
+ etc/nginx/sites-enabled/default
+```
+- Copy paste these codes: 
 
-copy past these codes: 
-
+```
 upstream back-end {
 
         server localhost:7000;
@@ -49,12 +52,10 @@ upstream storage {
 	server localhost:7011;
 }
 
+```
+Copy paste below code in the server block of *default* file: 
 
-
-
-///server block 
-
-
+```
 location /core/ {
 
                 proxy_pass http://back-end/;
@@ -71,6 +72,7 @@ location /customer-home/ {
 location /storage/ {
 		proxy_pass http://storage/;
 }
+```
 
 
 
