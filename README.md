@@ -1,7 +1,7 @@
 # drobboo-project-guide
 
 
-## Docker Configuration and Database Import
+## Docker Configuration
 - After installing Docker, run the following commands to create and start two containers of MongoDB and PostgreSQL databases.
 ```
 $ docker run -it --name postgres -d -e POSTGRES_PASSWORD="password" -p 5432:5432 -v /var/lib/docker-db/postgresql/data:/var/lib/postgresql/data postgres
@@ -23,7 +23,7 @@ Example:
 $ docker start mongo
 $ docker start postgres
  ```
-
+##### Some Docker Commands(optional)
 - To see the full list of created containers(both running and stopped) 
 ```
 $ docker ps -a
@@ -49,6 +49,8 @@ $ netstat -tunlp
 ```
 $ kill -9 <PID>
 ```
+## Postgres Database Import
+
 - To create the core database in `Drobboo Server` project:
 ```
 $ yarn db:create
@@ -77,7 +79,7 @@ $ docker exec -it  postgres bash
 ```
 $ psql -U <username> <database_name>     <     <path to pgsql file inside  container>
 ```
-`drobboo_dev` database is defined in `env` file. 
+`drobboo_dev` database is defined in `env` file.
  For Example:
  ```
  $ psql -U postgres drobboo_dev <    /var/lib/postgresql/data/backup/drobboo_dbfile.pgsql
@@ -87,6 +89,38 @@ $ psql -U <username> <database_name>     <     <path to pgsql file inside  conta
 ```
 $ yarn db:migrate:all
 ```
+
+## MongoDB Database Import
+- Before entering the container , run the following command to copy the  zip file of mongodb json  files  from HOST OS into the container OS:
+```
+$  docker cp <path to mongo zip file> <container_id/container_name>:<path to backup folder inside container where the zip of mongo json files will be saved>
+```
+For Example:
+```
+$  docker cp  /home/sajid576/Public/drobboo/mongo.tar.gz   mongo:/tmp/
+```
+- To enter into mongo container as `Root` user,run the following command:
+```
+$ docker exec -it  mongo bash
+```
+
+- The extract the zip of mongo json files.
+```
+$  tar -xvf mongo.tar.gz
+```
+- import the mongodb json and bson files to a database named `drobboo_customer_home_dev`. The database name is defined in env file.
+```
+$  mongorestore --host ${DB_HOST} --port ${DB_PORT} -u ${DBUSERNAME} -p ${DBPASSWORD} -d ${DBNAME} --authenticationDatabase ${AUTH_DB_NAME} ${DUMPLOC}/${DBBACKUPFILE}
+```
+For Example
+```
+$ mongorestore --host localhost --port  27017 -u  mongo -p password   -d  drobboo_customer_home_dev  --authenticationDatabase admin  /tmp/drobboo_customer_home_dev_1-2021-10-13_04-35-01/drobboo_customer_home_dev_1
+```
+
+
+
+
+
 
 
 
