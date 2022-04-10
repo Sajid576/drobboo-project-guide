@@ -1,8 +1,11 @@
 # drobboo-project-guide
-
+## Prequisities
+- Docker
+- Nginx
+- Node <= 14
 
 ## Docker Configuration
-- After installing Docker, run the following commands to create and start two containers of MongoDB and PostgreSQL databases.
+- Run the following commands to create and start two containers of MongoDB and PostgreSQL databases.
 ```
 $ docker run -it --name postgres -d -e POSTGRES_PASSWORD="password" -p 5432:5432 -v /var/lib/docker-db/postgresql/data:/var/lib/postgresql/data postgres
 ```
